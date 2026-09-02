@@ -43,7 +43,12 @@ class ProductController extends Controller
                     'message' => 'No products found for this category',
                 ], 404);
             }
-            return new ProductMiniCollection($products->paginate(50));
+            return (new ProductMiniCollection($products->paginate($request->limit ?? 50)))->additional([
+                'meta' => [
+                    'meta_title' => $category->meta_title,
+                    'meta_description' => $category->meta_description,
+                ],
+            ]);
         }
         return new ProductMiniCollection(Product::latest()->where('published', 1)->paginate(50));
     }

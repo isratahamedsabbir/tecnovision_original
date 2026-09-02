@@ -189,12 +189,14 @@ class EmailUtility
                 
                 $array['subject'] = $emailSubject;
                 $array['content'] = $emailBody;
-    
+
+                $emailSendTo = $user->id == $admin->id ? (get_setting('order_email') ?: $user->email) : $user->email;
+
                 try {
-                    Mail::to($user->email)->queue(new MailManager($array));
+                    Mail::to($emailSendTo)->queue(new MailManager($array));
                 } catch (\Exception $e) {}
-            }   
-        }  
+            }
+        }
     }
 
     // User Email Verification

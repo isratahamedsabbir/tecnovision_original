@@ -76,6 +76,22 @@
                                 <div class="file-preview box sm"></div>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-from-label">{{translate('Contact Email')}}</label>
+                            <div class="col-sm-9">
+                                <input type="hidden" name="types[]" value="contact_email">
+                                <input type="email" name="contact_email" class="form-control" value="{{ get_setting('contact_email') }}" placeholder="{{ translate('Email to receive contact form messages') }}">
+                                <small>{{ translate('Contact us form submissions will be sent to this email') }}</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-from-label">{{translate('Order Email')}}</label>
+                            <div class="col-sm-9">
+                                <input type="hidden" name="types[]" value="order_email">
+                                <input type="email" name="order_email" class="form-control" value="{{ get_setting('order_email') }}" placeholder="{{ translate('Email to receive order notifications') }}">
+                                <small>{{ translate('New order notifications will be sent to this email') }}</small>
+                            </div>
+                        </div>
                         <div class="text-right">
     						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
     					</div>

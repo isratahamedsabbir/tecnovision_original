@@ -88,7 +88,7 @@ class ContactController extends Controller
         $array['from'] = $request->email;
 
         try {
-            Mail::to($admin->email)->queue(new ContactMailManager($array));
+            Mail::to(get_setting('contact_email') ?: $admin->email)->queue(new ContactMailManager($array));
             Contact::insert([
                 'name' => $request->name,
                 'email' => $request->email,

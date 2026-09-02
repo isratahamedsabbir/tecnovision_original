@@ -1,0 +1,40 @@
+@extends('backend.layouts.app')
+
+@section('content')
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0 h6">{{translate('Shipping Charges Information')}}</h5>
+            </div>
+            <div class="card-body">
+                <form id="add_form" class="form-horizontal" action="{{ route('shipping_charges.update', $shipping_charge->id) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Name')}}</label>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="{{translate('Name')}}" id="name" name="name" value="{{ $shipping_charge->name }}" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Cost')}}</label>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="{{translate('Cost')}}" id="cost" name="cost" value="{{ $shipping_charge->cost }}" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-primary">
+                            {{translate('Save')}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

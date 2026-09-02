@@ -394,10 +394,18 @@ class BusinessSettingsController extends Controller
     {
         foreach ($request->types as $key => $type) {
             if ($type == 'site_name') {
-                $this->overWriteEnvFile('APP_NAME', $request[$type]);
+                try {
+                    $this->overWriteEnvFile('APP_NAME', $request[$type]);
+                } catch (\Throwable $e) {
+                    \Log::error('Failed to write .env for site_name: ' . $e->getMessage());
+                }
             }
             if ($type == 'timezone') {
-                $this->overWriteEnvFile('APP_TIMEZONE', $request[$type]);
+                try {
+                    $this->overWriteEnvFile('APP_TIMEZONE', $request[$type]);
+                } catch (\Throwable $e) {
+                    \Log::error('Failed to write .env for timezone: ' . $e->getMessage());
+                }
             } else {
                 $lang = null;
                 if (gettype($type) == 'array') {

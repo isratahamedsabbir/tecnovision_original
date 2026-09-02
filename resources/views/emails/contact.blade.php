@@ -93,11 +93,11 @@
                         > 
                             <a
                             target="_blank"
-                                href="https://www.agrony.com"
+                                href="{{ url('/') }}"
                                 class="header-title"
                                 style="font-family:Arial, Helvetica, sans-serif; font-size:32px; line-height:38px; font-weight:700; color:#ffffff; margin:0;"
-                            > 
-                                <img src="https://i.postimg.cc/qqmXsnc0/logo.png" alt="Agrony" style="max-width: 100px; height: auto;">
+                            >
+                                <img src="{{ uploaded_asset(get_setting('system_logo_black')) }}" alt="{{ get_setting('site_name') }}" style="max-width: 100px; height: auto;">
                             </a>
 
                             <div
@@ -149,7 +149,7 @@
                                         color: #555555;
                                         padding-bottom: 15px;"
                                     >
-                                        You have received a new query from a customer through the Agrony website contact form.
+                                        You have received a new query from a customer through the {{ get_setting('site_name') }} website contact form.
                                         The details are given below:
                                     </td>
                                 </tr>
@@ -329,10 +329,10 @@
                                         style="padding:22px 0 22px 0;"
                                     >
                                         <a
-                                            href="https://www.agrony.com"
+                                            href="{{ url('/') }}"
                                             target="_blank"
                                             style="font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:22px; font-weight:400; color:#045b30; text-decoration:underline;"
-                                        > 
+                                        >
                                             VISIT WEBSITE
                                         </a>
                                     </td> 
@@ -372,7 +372,7 @@
                                         style="padding:22px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:24px; color:#999999;"
                                     > 
                                         <span style="font-weight:400;">
-                                            Agrony
+                                            {{ get_setting('site_name') }}
                                         </span>
 
                                         <span style="padding:0 8px; color:#999999;">
@@ -380,15 +380,15 @@
                                         </span>
 
                                         <span>
-                                            Phone: +8801898 879990
+                                            Phone: {{ get_setting('contact_phone') }}
                                         </span>
 
                                         <span style="padding:0 8px; color:#999999;">
                                             |
-                                        </span> 
+                                        </span>
 
                                         <span>
-                                            Email: info@agrony.com
+                                            Email: {{ get_setting('contact_email') }}
                                         </span>
                                     </td>
                                 </tr>

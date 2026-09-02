@@ -79,6 +79,7 @@ class ContactController extends Controller
             ],
         ]);
         $admin = get_admin();
+        $adminEmail = $admin->email ?? null;
 
         $array['name'] = $request->name;
         $array['email'] = $request->email;
@@ -88,14 +89,15 @@ class ContactController extends Controller
         $array['from'] = $request->email;
 
         try {
-            Mail::to(get_setting('contact_email') ?: $admin->email)->queue(new ContactMailManager($array));
+            Mail::to(get_setting('contact_email') ?: $adminEmail)->queue(new ContactMailManager($array));
             Contact::insert([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'content' => $request->content,
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            \Log::error('Contact form failed: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             flash(translate('Something Went wrong'))->error();
             return back();
         }

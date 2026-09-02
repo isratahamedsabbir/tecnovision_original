@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V2;
 
 use App\Mail\ContactMailManager;
 use App\Models\Contact;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Log;
@@ -24,7 +23,7 @@ class ContactController extends Controller
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|max:255',
-            'phone'    => 'required|numeric|digits_between:7,15',
+            'phone'    => ['required', 'regex:/^\+?[0-9]{7,15}$/'],
             'content'  => 'required|string|max:1000'
         ]);
 
@@ -33,6 +32,7 @@ class ContactController extends Controller
         }
 
         $admin = get_admin();
+        $adminEmail = $admin->email ?? null;
 
         $array = [];
 
@@ -44,7 +44,7 @@ class ContactController extends Controller
         $array['from']    = $request->email;
 
         try {
-            Mail::to(get_setting('contact_email') ?: $admin->email)->queue(new ContactMailManager($array));
+            Mail::to(get_setting('contact_email') ?: $adminEmail)->queue(new ContactMailManager($array));
             Contact::insert([
                 'name'    => $request->name,
                 'email'   => $request->email,
@@ -52,8 +52,8 @@ class ContactController extends Controller
                 'content' => $request->content,
             ]);
             return response()->json(['success' => true, 'message' => translate('Query has been sent successfully')]);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
+        } catch (\Throwable $e) {
+            Log::error('Contact API failed: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json(['success' => false, 'message' => translate('Something Went wrong')]);
         }
     }

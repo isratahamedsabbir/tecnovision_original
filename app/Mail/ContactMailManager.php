@@ -29,7 +29,8 @@ class ContactMailManager extends Mailable
     public function build()
     {
         return $this->view('emails.contact')
-                    ->from($this->array['from'], env('MAIL_FROM_NAME'))
+                    ->from(config('mail.from.address'), config('mail.from.name'))
+                    ->replyTo($this->array['from'], $this->array['name'] ?? null)
                     ->subject($this->array['subject'])
                     ->with([
                         'name' => $this->array['name'],

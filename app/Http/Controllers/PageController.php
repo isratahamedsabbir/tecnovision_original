@@ -146,6 +146,11 @@ class PageController extends Controller
             Redis::del('pages');
 
             flash(translate('Page has been updated successfully'))->success();
+
+            if ($request->page == 'home') {
+                return redirect()->route('custom-pages.edit', ['id' => $page->slug, 'lang' => $request->lang, 'page' => 'home'])->withFragment('home_seo');
+            }
+
             return redirect()->route('website.pages');
         }
 

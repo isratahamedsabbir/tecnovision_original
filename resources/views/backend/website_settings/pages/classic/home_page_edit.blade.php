@@ -103,6 +103,13 @@
 							{{ translate('Category Wise Products') }}
 						</a>
 					</li>
+					<!-- SEO -->
+					<li class="nav-item">
+						<a class="nav-link" id="home-seo-tab" href="#home_seo"
+							data-toggle="tab" data-target="#home_seo" type="button" role="tab" aria-controls="home_seo" aria-selected="false">
+							{{ translate('SEO') }}
+						</a>
+					</li>
 					<!-- Classifieds -->
 					<!-- <li class="nav-item">
 						<a class="nav-link" id="classifiedss-tab" href="#classifieds"
@@ -1118,6 +1125,52 @@
 								<div class="mt-4 text-right">
 									<button type="submit" class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
 								</div>
+							</div>
+						</form>
+					</div>
+
+					<!-- SEO -->
+					<div class="tab-pane fade" id="home_seo" role="tabpanel" aria-labelledby="home-seo-tab">
+						<form action="{{ route('custom-pages.update', $page->id) }}" method="POST" enctype="multipart/form-data">
+							@csrf
+							<input type="hidden" name="_method" value="PATCH">
+							<input type="hidden" name="page" value="home">
+							<input type="hidden" name="lang" value="{{ $lang }}">
+							<input type="hidden" name="title" value="{{ $page->getTranslation('title', $lang) ?: 'Home Page' }}">
+							<input type="hidden" name="content" value="{{ $page->getTranslation('content', $lang) ?: '-' }}">
+
+							<div class="bg-white p-3 p-sm-2rem">
+								<div class="form-group">
+									<label class="col-from-label fs-13 fw-500">{{ translate('Meta Title') }}</label>
+									<input type="text" class="form-control" placeholder="{{ translate('Meta Title') }}" name="meta_title" value="{{ $page->meta_title }}">
+								</div>
+
+								<div class="form-group">
+									<label class="col-from-label fs-13 fw-500">{{ translate('Meta Description') }}</label>
+									<textarea class="resize-off form-control" placeholder="{{ translate('Meta Description') }}" name="meta_description">{{ $page->meta_description }}</textarea>
+								</div>
+
+								<div class="form-group">
+									<label class="col-from-label fs-13 fw-500">{{ translate('Meta Keywords') }}</label>
+									<textarea class="resize-off form-control" placeholder="{{ translate('Keyword, Keyword') }}" name="keywords">{{ $page->keywords }}</textarea>
+									<small class="text-muted">{{ translate('Separate with comma') }}</small>
+								</div>
+
+								<div class="form-group">
+									<label class="col-from-label fs-13 fw-500">{{ translate('Meta Image') }}</label>
+									<div class="input-group " data-toggle="aizuploader" data-type="image">
+										<div class="input-group-prepend">
+											<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
+										</div>
+										<div class="form-control file-amount">{{ translate('Choose File') }}</div>
+										<input type="hidden" name="meta_image" class="selected-files" value="{{ $page->meta_image }}">
+									</div>
+									<div class="file-preview box"></div>
+								</div>
+							</div>
+							<!-- Save Button -->
+							<div class="mt-4 text-right">
+								<button type="submit" class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
 							</div>
 						</form>
 					</div>

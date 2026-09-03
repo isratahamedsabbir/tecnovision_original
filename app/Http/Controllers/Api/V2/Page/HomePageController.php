@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V2\Page;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\ProductMiniCustomCollection;
 use App\Models\Category;
+use App\Models\Page;
 use App\Models\Product;
 use App\Services\BusinessSettingService;
 use Exception;
@@ -34,6 +35,16 @@ class HomePageController extends Controller
             $singleImage = ['top_banner_image', 'bottom_banner_image'];
             $multipleImage = ['home_slider_images'];
             $filteredCms = $this->businessSettingService->dataLoad($typeKeys, $singleImage, $multipleImage);
+
+            $homePage = Page::where('type', 'home_page')->first();
+            if ($homePage) {
+                $filteredCms['seo'] = [
+                    'meta_title' => $homePage->meta_title,
+                    'meta_description' => $homePage->meta_description,
+                    'meta_keywords' => $homePage->keywords,
+                    'meta_image' => $homePage->meta_image ? uploaded_asset($homePage->meta_image) : null,
+                ];
+            }
 
             $upcoming = Product::where('upcoming', 1)->where('published', 1)->physical();
             $filteredCms['upcoming'] = new ProductMiniCustomCollection(filter_products($upcoming)->latest()->get());

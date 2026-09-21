@@ -165,6 +165,7 @@ class AdminController extends Controller
 
     public function top_category_products_section(Request $request)
     {
+        $interval = $this->sanitizeIntervalType($request);
         $top_categories_products = DB::table(DB::raw('(SELECT products.id product_id, products.name product_name, products.slug product_slug, products.auction_product, products.category_id,
                                                         `products`.`thumbnail_img` as `product_thumbnail_img`, od.sales, od.total, od.created_at order_detail_created,
                                                         categories.name AS category_name,
@@ -174,7 +175,7 @@ class AdminController extends Controller
                                                 INNER JOIN (
                                                 SELECT product_id, SUM(quantity) sales, SUM(price + tax) AS total, created_at
                                                 FROM order_details
-                                                WHERE ' . ($request->interval_type == 'all' ?: 'created_at >= DATE_SUB(NOW(), INTERVAL 1 ' . $request->interval_type . ')') . '
+                                                WHERE ' . ($interval != null ? 'created_at >= DATE_SUB(NOW(), INTERVAL 1 ' . $interval . ')' : '1=1') . '
                                                 AND order_details.delivery_status = "delivered"
                                                 GROUP BY product_id
                                                 )  od ON od.product_id = products.id
@@ -200,6 +201,7 @@ class AdminController extends Controller
 
     public function inhouse_top_categories(Request $request)
     {
+        $interval = $this->sanitizeIntervalType($request);
         $inhouse_top_category_query = Order::query();
         $inhouse_top_category_query->select('categories.id', 'categories.name', 'categories.cover_image', DB::raw('SUM(order_details.price + order_details.tax) as total'))
             ->leftJoin('order_details', 'orders.id', '=', 'order_details.order_id')
@@ -207,8 +209,8 @@ class AdminController extends Controller
             ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
             ->where('orders.delivery_status', '=', 'delivered')
             ->whereRaw('products.added_by = "admin"');
-        if ($request->interval_type != 'all') {
-            $inhouse_top_category_query->where('orders.created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 ' . $request->interval_type . ')'));
+        if ($interval != null) {
+            $inhouse_top_category_query->where('orders.created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 ' . $interval . ')'));
         }
         $inhouse_top_categories = $inhouse_top_category_query->groupBy('categories.name')
             ->orderBy('total', 'desc')
@@ -220,6 +222,7 @@ class AdminController extends Controller
 
     public function inhouse_top_brands(Request $request)
     {
+        $interval = $this->sanitizeIntervalType($request);
         $inhouse_top_brand_query = Order::query();
         $inhouse_top_brand_query->select('brands.id', 'brands.name', 'brands.logo', DB::raw('SUM(order_details.price + order_details.tax) as total'))
             ->leftJoin('order_details', 'orders.id', '=', 'order_details.order_id')
@@ -228,8 +231,8 @@ class AdminController extends Controller
             ->where('orders.delivery_status', '=', 'delivered')
             ->where('products.brand_id', '!=', null)
             ->whereRaw('products.added_by = "admin"');
-        if ($request->interval_type != 'all') {
-            $inhouse_top_brand_query->where('orders.created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 ' . $request->interval_type . ')'));
+        if ($interval != null) {
+            $inhouse_top_brand_query->where('orders.created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 ' . $interval . ')'));
         }
         $inhouse_top_brands = $inhouse_top_brand_query->groupBy('brands.name')
             ->orderBy('total', 'desc')
@@ -253,6 +256,7 @@ class AdminController extends Controller
 
     public function top_sellers_products_section(Request $request)
     {
+        $interval = $this->sanitizeIntervalType($request);
         $new_top_sellers_query = Order::query();
         $new_top_sellers_query = Order::select('shops.user_id AS shop_id', 'shops.name AS shop_name', 'shops.logo', DB::raw('SUM(grand_total) AS sale'))
             ->join('shops', 'orders.seller_id', '=', 'shops.user_id')
@@ -264,8 +268,8 @@ class AdminController extends Controller
             ->where('orders.delivery_status', 'delivered')
             ->groupBy('orders.seller_id')
             ->orderBy('sale', 'desc');
-        if ($request->interval_type != 'all') {
-            $new_top_sellers_query->where('orders.created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 ' . $request->interval_type . ')'));
+        if ($interval != null) {
+            $new_top_sellers_query->where('orders.created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 ' . $interval . ')'));
         }
 
         $new_top_sellers = $new_top_sellers_query->get();
@@ -278,8 +282,8 @@ class AdminController extends Controller
                 ->where('order_details.delivery_status', 'delivered')
                 ->where('products.approved', 1)
                 ->where('products.published', 1);
-            if ($request->interval_type != 'all') {
-                $products_query->where('order_details.created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 ' . $request->interval_type . ')'));
+            if ($interval != null) {
+                $products_query->where('order_details.created_at', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 ' . $interval . ')'));
             }
             $products_query->groupBy('product_id')
                 ->orderBy('sale', 'desc')
@@ -313,6 +317,7 @@ class AdminController extends Controller
 
     public function top_brands_products_section(Request $request)
     {
+        $interval = $this->sanitizeIntervalType($request);
         $top_brands_products = DB::table(DB::raw('(SELECT products.id product_id, products.name product_name, products.slug product_slug, products.auction_product, products.brand_id,
                                                         `products`.`thumbnail_img` as `product_thumbnail_img`, od.sales, od.total, brands.name AS brand_name,
                                                         `brands`.`logo`,
@@ -321,7 +326,7 @@ class AdminController extends Controller
                                             INNER JOIN (
                                                 SELECT product_id, SUM(quantity) sales, SUM(price + tax) AS total, created_at
                                                 FROM order_details
-                                                WHERE ' . ($request->interval_type == 'all' ?: 'created_at >= DATE_SUB(NOW(), INTERVAL 1 ' . $request->interval_type . ')') . '
+                                                WHERE ' . ($interval != null ? 'created_at >= DATE_SUB(NOW(), INTERVAL 1 ' . $interval . ')' : '1=1') . '
                                                 AND order_details.delivery_status = "delivered"
                                                 GROUP BY product_id
                                             )  od ON od.product_id = products.id
@@ -463,5 +468,16 @@ class AdminController extends Controller
 
             return $download;
         }
+    }
+
+    private function sanitizeIntervalType(Request $request)
+    {
+        if ($request->interval_type != 'all') {
+            $interval = strtoupper($request->interval_type);
+            if (in_array($interval, ['HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR'])) {
+                return $interval;
+            }
+        }
+        return null;
     }
 }

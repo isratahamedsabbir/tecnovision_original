@@ -98,6 +98,18 @@
         "optimize-autoloader": true,
         "allow-plugins": {
             "symfony/thanks": true
+        },
+        "policy": {
+            "advisories": {
+                "ignore-id": [
+                    "PKSA-4g5g-4rkv-myqs",
+                    "PKSA-m5cs-t1y6-qpcs",
+                    "PKSA-3r5d-mb8f-1qw9",
+                    "PKSA-mdq4-51ck-6kdq",
+                    "PKSA-8qx3-n5y5-vvnd",
+                    "PKSA-w7xr-vk7n-rstm"
+                ]
+            }
         }
     },
     "minimum-stability": "stable",

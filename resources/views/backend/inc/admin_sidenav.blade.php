@@ -2174,6 +2174,23 @@
                 </li>
                 @endcanany
 
+                <!-- Backup -->
+                @can('backup_management')
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('system_backup.index') }}"
+                        class="aiz-side-nav-link {{ areActiveRoutes(['system_backup.index'])}}">
+                        <div class="aiz-side-nav-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                <path
+                                    d="M8,1C4.5,1,2,2.1,2,3.5V12.5C2,13.9,4.5,15,8,15s6-1.1,6-2.5V3.5C14,2.1,11.5,1,8,1Zm4.7,11.5c0,0.4-1.7,1.3-4.7,1.3s-4.7-0.9-4.7-1.3v-1.8c1.1,0.6,2.8,1,4.7,1s3.6-0.4,4.7-1V12.5Zm0-3.4c0,0.4-1.7,1.3-4.7,1.3s-4.7-0.9-4.7-1.3V6.3c1.1,0.6,2.8,1,4.7,1s3.6-0.4,4.7-1V9.1Zm0-3.4c0,0.4-1.7,1.3-4.7,1.3s-4.7-0.9-4.7-1.3V3.5c0-0.4,1.7-1.3,4.7-1.3s4.7,0.9,4.7,1.3V5.7Z"
+                                    fill="#575b6a" />
+                            </svg>
+                        </div>
+                        <span class="aiz-side-nav-text">{{translate('Backup')}}</span>
+                    </a>
+                </li>
+                @endcan
+
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('uploaded-files.index') }}"
                         class="aiz-side-nav-link {{ areActiveRoutes(['uploaded-files.create'])}}">

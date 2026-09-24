@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Report\EarningReportController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandBulkUploadController;
@@ -691,6 +692,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     Route::post('/system/generate-sitemap', [AdminController::class, 'DoSitemapGenerate'])->name('generate_sitemap');
     Route::post('/system/delete-sitemap', [AdminController::class, 'DeleteSitemapFile'])->name('delete_sitemap');
     Route::post('/system/download-old-sitemap', [AdminController::class, 'DownloadSingleSitemapFile'])->name('download_old_sitemap');
+
+    // Backup
+    Route::controller(BackupController::class)->group(function () {
+        Route::get('/system/backup', 'index')->name('system_backup.index');
+        Route::post('/system/backup/database', 'database')->name('system_backup.database');
+        Route::post('/system/backup/storage', 'storage')->name('system_backup.storage');
+        Route::get('/system/backup/download/{file}', 'download')->name('system_backup.download');
+        Route::delete('/system/backup/{file}', 'destroy')->name('system_backup.destroy');
+    });
 });
 
 Route::get('/system/sitemap-item-add/{item}', [AdminController::class, 'SitemapItems'])->name('sitemap_item_add');

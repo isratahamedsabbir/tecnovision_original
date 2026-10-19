@@ -47,10 +47,10 @@ class HomePageController extends Controller
             }
 
             $upcoming = Product::where('upcoming', 1)->where('published', 1)->physical();
-            $filteredCms['upcoming'] = new ProductMiniCustomCollection(filter_products($upcoming)->latest()->get());
+            $filteredCms['upcoming'] = new ProductMiniCustomCollection(filter_products($upcoming)->orderByDesc('id')->get());
 
             $bestSellers = Product::where('best_seller', 1)->where('published', 1)->physical();
-            $filteredCms['best_seller'] = new ProductMiniCustomCollection(filter_products($bestSellers)->latest()->get());
+            $filteredCms['best_seller'] = new ProductMiniCustomCollection(filter_products($bestSellers)->orderByDesc('id')->get());
 
             $homeCategoryIds = json_decode(get_setting('home_categories'));
             $categoryWiseProducts = [];
@@ -69,7 +69,7 @@ class HomePageController extends Controller
                         'slug' => $category->slug,
                         'cover_image' => uploaded_asset($category->cover_image),
                         'products' => new ProductMiniCustomCollection(
-                            filter_products($products)->latest()->take(5)->get()
+                            filter_products($products)->orderByDesc('id')->take(5)->get()
                         ),
                     ];
                 }

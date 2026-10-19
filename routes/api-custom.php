@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V2\FaqController;
 use App\Http\Controllers\Api\V2\AizUploadController;
 use App\Http\Controllers\Api\V2\SubscriberController;
 use App\Http\Controllers\Api\V2\CustomOrderController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Api\V2\Page\BasicPageLayoutController;
 Route::group(['prefix' => 'v2/', 'middleware' => ['api']], function () {
 
     Route::get('home-page', [HomePageController::class, 'show']);
+    Route::get('faqs', [FaqController::class, 'index']);
     Route::get('basic-page-layout', [BasicPageLayoutController::class, 'show']);
 
     Route::get('custom-pages', [CustomPageController::class, 'index']);
